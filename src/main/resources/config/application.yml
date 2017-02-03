@@ -1,0 +1,53 @@
+---
+info:
+    app:
+        name: ${name}
+        description: ${description}
+        version: ${version}
+        built-on: ${builtOn}
+
+spring:
+    main:
+        banner-mode: console
+    groovy:
+        template:
+            check-template-location: false
+    jackson:
+        serialization:
+            indent_output: true
+        serialization-inclusion: non_empty
+
+management:
+    contextPath: /operations
+    security:
+        enabled: false
+        role: admin
+        sessions: stateless
+
+endpoints:
+    health:
+        time-to-live: 1000
+        sensitive: false
+
+server:
+    contextPath: /
+    port: 8080
+#
+#logging:
+#    config: classpath:logback.xml
+
+# Override the default security properties, defined in org.springframework.boot.autoconfigure.security.SecurityProperties
+security:
+    user:
+        name: operations
+        password: operations
+    basic:
+        enabled: false
+        realm: example
+
+# app specific properties for the default profile
+example:
+    logging:
+        serviceCode: ${name}
+        serviceInstance: \${random.int[1,65536]}
+        realm: development
