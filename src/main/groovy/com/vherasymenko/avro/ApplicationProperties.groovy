@@ -6,13 +6,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Custom configuration properties that are driven by Spring Boot and its application.yml file.
  */
-@ConfigurationProperties( value = 'example', ignoreUnknownFields = false )
+@ConfigurationProperties( value = 'avro', ignoreUnknownFields = false )
 class ApplicationProperties {
 
     /**
      * Contains the logging related properties.
      */
     Logging logging
+
+    /**
+     * The Rest API configuration.
+     */
+    RestProperties rest
 
     static class Logging {
         /**
@@ -31,9 +36,15 @@ class ApplicationProperties {
         String realm
     }
 
-    /**
-     * This property controls...
-     */
-    String foo
+    static class RestProperties {
+        /**
+         * The number of milliseconds the REST template should wait to establish a connection with the service it is calling.
+         */
+        int connectTimeout
 
+        /**
+         * The number of milliseconds the REST template should wait for a response from the service it is calling.
+         */
+        int readTimeout
+    }
 }

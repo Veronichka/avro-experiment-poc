@@ -16,6 +16,14 @@ spring:
         serialization:
             indent_output: true
         serialization-inclusion: non_empty
+    cloud:
+#        stream:
+#          schemaRegistryClient:
+#            endpoint: http://localhost:8990
+          bindings:
+            output:
+              destination: avro-events
+              contentType: 'application/json'
 
 management:
     contextPath: /operations
@@ -32,9 +40,10 @@ endpoints:
 server:
     contextPath: /
     port: 8080
-#
-#logging:
-#    config: classpath:logback.xml
+
+logging:
+  level:
+    org.springframework.integration: DEBUG
 
 # Override the default security properties, defined in org.springframework.boot.autoconfigure.security.SecurityProperties
 security:
@@ -46,8 +55,11 @@ security:
         realm: example
 
 # app specific properties for the default profile
-example:
+avro:
     logging:
         serviceCode: ${name}
         serviceInstance: \${random.int[1,65536]}
         realm: development
+    rest:
+        connectTimeout: 1000
+        readTimeout: 5000
