@@ -1,9 +1,13 @@
 
 package com.vherasymenko.avro
 
-import com.vherasymenko.avro.core.AvroEncoderPort
-import com.vherasymenko.avro.core.AvroEncoderService
-import com.vherasymenko.avro.outbound.MessageProducer
+import com.vherasymenko.avro.decoder.core.AvroDecoderPort
+import com.vherasymenko.avro.decoder.core.AvroDecoderService
+import com.vherasymenko.avro.encoder.core.AvroEncoderPort
+import com.vherasymenko.avro.encoder.core.AvroEncoderService
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderService
+import com.vherasymenko.avro.encoder.outbound.MessageProducer
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.boot.SpringApplication
@@ -40,8 +44,17 @@ class Application {
     }
 
     @Bean
-    AvroEncoderPort avroEncoderPort(MessageProducer eventProducer ) {
-        new AvroEncoderService( eventProducer )
+    AvroEncoderPort avroEncoderPort() {
+        new AvroEncoderService()
     }
 
+    @Bean
+    AvroDecoderPort avroDecoderPort() {
+        new AvroDecoderService()
+    }
+
+    @Bean
+    CourseInstallEncoderPort courseInstallEncoderPort( MessageProducer producer, AvroEncoderPort encoder ) {
+        new CourseInstallEncoderService( producer, encoder )
+    }
 }

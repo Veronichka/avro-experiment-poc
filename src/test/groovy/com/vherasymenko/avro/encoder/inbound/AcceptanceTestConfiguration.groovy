@@ -1,5 +1,5 @@
 
-package com.vherasymenko.avro.inbound
+package com.vherasymenko.avro.encoder.inbound
 
 import com.vherasymenko.avro.ApplicationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties

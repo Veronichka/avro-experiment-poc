@@ -1,5 +1,5 @@
 
-package com.vherasymenko.avro.inbound
+package com.vherasymenko.avro.encoder.inbound
 
 import cucumber.api.CucumberOptions
 import cucumber.api.junit.Cucumber
