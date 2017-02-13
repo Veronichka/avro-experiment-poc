@@ -1,14 +1,20 @@
 apply plugin: 'groovy'
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
+apply plugin: "com.commercehub.gradle.plugin.avro"
 
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:${dependencyPluginVersion}"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:${gradleAvroPlugin}"
     }
 }
 
@@ -28,11 +34,22 @@ dependencyManagement {
     }
 }
 
+description = 'Avro Experiment PoC'
+ext.builtOn = new Date()
+
 apply from: "$rootDir/gradle/cucumber.gradle"
+apply from: "$rootDir/gradle/spock.gradle"
 
 dependencies {
+    compile "org.apache.avro:avro-maven-plugin:${avroVersion}"
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
-    compile "org.springframework.boot:spring-boot-starter-web"
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+    compile 'org.springframework.cloud:spring-cloud-stream-schema'
+    compile 'org.springframework.cloud:spring-cloud-stream-schema-server'
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
+
+defaultTasks << 'clean'
+defaultTasks << 'build'
