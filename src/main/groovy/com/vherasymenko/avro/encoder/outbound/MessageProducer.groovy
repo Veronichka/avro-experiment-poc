@@ -1,4 +1,4 @@
-package com.vherasymenko.avro.outbound
+package com.vherasymenko.avro.encoder.outbound
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.stream.annotation.EnableBinding
@@ -16,7 +16,7 @@ class MessageProducer {
     private Source source
 
     @Autowired
-    MessageProducer(Source aSource ) {
+    MessageProducer( Source aSource ) {
         source = aSource
     }
 

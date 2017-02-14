@@ -9,12 +9,41 @@ import org.springframework.web.util.UriComponentsBuilder
  */
 class RestIntegrationTest extends BaseIntegrationTest {
 
-    def 'exercise full workflow'() {
+    def 'exercise full workflow for the course install'() {
         given: 'valid rest operations'
         assert restOperations
 
         and: 'valid json event'
-        def requestEvent = '{"name": "Ben", "favoriteNumber": 7, "favoriteColor": "red"}'
+        def requestEvent = '''
+            { 
+                "course" : {                                                      
+                    "uuid" : "fb88ad20-1702-11e3-a517-50e5494249f7",              
+                    "name" : "Russian Essentials Ver.2",                          
+                    "knownLanguage" : "RUSSIAN",                                  
+                    "targetLanguage" : "ENGLISH",                                 
+                    "product" : "LessonGin"                                       
+                },
+                "units" : [
+                    {
+                        "id" : 81,                                                
+                        "uuid" : "7764b0f0-9d28-4c2a-82b9-3cb5daba3335",          
+                        "name" : "Unit 1",                                        
+                        "maxScore" : 8,                                           
+                        "minScore" : 4,                                           
+                        "hasAssessment" : true,                                   
+                        "lessons" : [
+                            {
+                                "id" : 229,                                       
+                                "uuid" : "e7594991-0d76-4f88-b265-ca7235364338",  
+                                "name" : "Lesson 1",                              
+                                "position" : 1,                                   
+                                "isAssessment" : false                            
+                            }
+                        ]
+                    }
+                ]
+            }
+        '''
 
         when: 'the valid request event is sent through rest'
         def reportURI = restBaseURI.build().toUri()
@@ -30,6 +59,6 @@ class RestIntegrationTest extends BaseIntegrationTest {
                 scheme( 'http' ).
                 host( 'localhost' ).
                 port( portListener.serverPort ).
-                path( '/user' )
+                path( '/course/install' )
     }
 }

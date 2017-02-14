@@ -1,6 +1,6 @@
-package com.vherasymenko.avro.inbound
+package com.vherasymenko.avro.encoder.inbound
 
-import com.vherasymenko.avro.core.AvroEncoderPort
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController
 class RestGateway {
 
     /**
-     * Tha avro encoder.
+     * The encoder for the course install document.
      */
-    private final AvroEncoderPort avroEncoder
+    private final CourseInstallEncoderPort courseInstallEncoder
 
     @Autowired
-    RestGateway( AvroEncoderPort anAvroEncoder ) {
-        avroEncoder = anAvroEncoder
+    RestGateway( CourseInstallEncoderPort aCourseInstallEncoder ) {
+        courseInstallEncoder = aCourseInstallEncoder
     }
 
-    @RequestMapping( path = 'user', method = [RequestMethod.POST] )
-    ResponseEntity<String> fetchApplicationList( @RequestBody String reportRequest ) {
-        avroEncoder.encodeEvent( reportRequest )
+    @RequestMapping( path = 'course/install', method = [RequestMethod.POST] )
+    ResponseEntity<String> serializeCourseInstall( @RequestBody String requestEvent ) {
+        courseInstallEncoder.encodeEvent( requestEvent )
         ResponseEntity.ok( 'The encoded event is sent to the messaging system.' )
     }
 }

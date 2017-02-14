@@ -17,13 +17,17 @@ spring:
             indent_output: true
         serialization-inclusion: non_empty
     cloud:
-#        stream:
-#          schemaRegistryClient:
-#            endpoint: http://localhost:8990
-          bindings:
-            output:
-              destination: avro-events
-              contentType: 'application/json'
+        stream:
+            bindings:
+                input:
+                    destination: avro
+                output:
+                    destination: avro
+    rabbitmq:
+          host: rabbitmq
+          username: guest
+          password: guest
+          virtual-host: /
 
 management:
     contextPath: /operations
