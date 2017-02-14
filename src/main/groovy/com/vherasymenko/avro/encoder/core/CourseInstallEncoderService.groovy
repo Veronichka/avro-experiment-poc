@@ -1,6 +1,7 @@
 package com.vherasymenko.avro.encoder.core
 
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
+import com.vherasymenko.avro.schared.AvroConstants
 import event.course_install.Course
 import event.course_install.CourseInstall
 import event.course_install.Lesson
@@ -73,6 +74,6 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
         def encodedDocument = encoder.encodeEvent( schema, avroData, CourseInstall.class )
 
         // send encoded document to the messaging system
-        producer.sendMessage( encodedDocument )
+        producer.sendMessage( encodedDocument, AvroConstants.COURSE_INSTALL_CHANNEL )
     }
 }

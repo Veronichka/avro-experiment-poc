@@ -1,9 +1,11 @@
 package com.vherasymenko.avro.decoder.core
 
+import org.apache.avro.Schema
+
 /**
  * The avro decoder port.
  */
 interface AvroDecoderPort {
 
-    void decodeEvent( String event )
+    void decodeEvent( Schema schema, String event )
 }

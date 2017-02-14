@@ -3,6 +3,10 @@ package com.vherasymenko.avro
 
 import com.vherasymenko.avro.decoder.core.AvroDecoderPort
 import com.vherasymenko.avro.decoder.core.AvroDecoderService
+import com.vherasymenko.avro.decoder.core.CourseInstallDecoderPort
+import com.vherasymenko.avro.decoder.core.CourseInstallDecoderService
+import com.vherasymenko.avro.decoder.core.MessageRouter
+import com.vherasymenko.avro.decoder.core.MessageRouterPort
 import com.vherasymenko.avro.encoder.core.AvroEncoderPort
 import com.vherasymenko.avro.encoder.core.AvroEncoderService
 import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
@@ -43,10 +47,19 @@ class Application {
         bean
     }
 
+    // Encoder
+
     @Bean
     AvroEncoderPort avroEncoderPort() {
         new AvroEncoderService()
     }
+
+    @Bean
+    CourseInstallEncoderPort courseInstallEncoder( MessageProducer producer, AvroEncoderPort encoder ) {
+        new CourseInstallEncoderService( producer, encoder )
+    }
+
+    // Decoder
 
     @Bean
     AvroDecoderPort avroDecoderPort() {
@@ -54,7 +67,12 @@ class Application {
     }
 
     @Bean
-    CourseInstallEncoderPort courseInstallEncoderPort( MessageProducer producer, AvroEncoderPort encoder ) {
-        new CourseInstallEncoderService( producer, encoder )
+     CourseInstallDecoderPort courseInstallDecoder( AvroDecoderPort decoder ) {
+        new CourseInstallDecoderService( decoder )
+    }
+
+    @Bean
+    MessageRouterPort messageRouter( CourseInstallDecoderPort courseInstallDecoder ) {
+        new MessageRouter( courseInstallDecoder )
     }
 }

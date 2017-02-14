@@ -1,0 +1,27 @@
+{
+"namespace": "event.lesson_install",
+"type": "record",
+"name": "LessonInstall",
+"fields": [
+    {"name": "agent", "type": {"type": "enum", "name": "Agent", "symbols": ["WEB", "DESKTOP", "MOBILE"]}},
+    {"name": "status",
+     "type": {
+         "type": "record",
+         "name": "LessonStatus",
+         "fields": [
+            {"name": "userUuid", "type": "string"},
+            {"name": "courseUuid", "type": "string"},
+            {"name": "unitId", "type": "int"},
+            {"name": "lessonUuid", "type": "string"},
+            {"name": "completionStatus", "type": {"type": "enum", "name": "CompletionStatus", "symbols": ["NOT_STARTED", "IN_PROGRESS", "COMPLETED"]}},
+            {"name": "score", "type": "int"},
+            {"name": "time", "type": "int"},
+            {"name": "markedLearned", "type": "boolean"},
+            {"name": "testedOut", "type": "boolean"},
+            {"name": "unitAssessmentStatus", "type": ["null", {"type": "enum", "name": "UnitAssessmentStatus", "symbols": ["NOT_STARTED", "FAILED", "PASSED"]}]},
+            {"name": "unitAssessmentScore", "type": "int"}
+            ]
+        }
+    }
+    ]
+}
