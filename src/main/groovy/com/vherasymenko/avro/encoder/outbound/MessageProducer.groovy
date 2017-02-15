@@ -1,10 +1,9 @@
 package com.vherasymenko.avro.encoder.outbound
 
-import com.vherasymenko.avro.schared.MessageHeaders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.stream.annotation.EnableBinding
 import org.springframework.cloud.stream.messaging.Source
-import org.springframework.messaging.support.MessageBuilder
+import org.springframework.messaging.Message
 import org.springframework.stereotype.Component
 
 /**
@@ -21,9 +20,7 @@ class MessageProducer {
         source = aSource
     }
 
-    void sendMessage( String message, String eventContentType ) {
-        source.output().send( MessageBuilder.withPayload( message )
-                                            .setHeader( MessageHeaders.CONTENT_TYPE, eventContentType )
-                                            .build() )
+    void sendMessage( Message message ) {
+        source.output().send( message )
     }
 }

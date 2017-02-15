@@ -5,5 +5,5 @@ package com.vherasymenko.avro.decoder.core
  */
 interface CourseInstallDecoderPort {
 
-    void decodeCourseInstallEvent(String event )
+    void decodeCourseInstallEvent( String event )
 }

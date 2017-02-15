@@ -1,17 +1,17 @@
 package com.vherasymenko.avro.decoder.core
 
+import com.vherasymenko.avro.decoder.core.json.AvroJsonDecoderPort
 import event.course_install.CourseInstall
-import org.springframework.beans.factory.annotation.Autowired
 
 /**
  * Decoder for the course install document.
  */
 class CourseInstallDecoderService implements CourseInstallDecoderPort {
 
-    @Autowired
-    AvroDecoderPort decoder
 
-    CourseInstallDecoderService( AvroDecoderPort aDecoder ) {
+    private final AvroJsonDecoderPort decoder
+
+    CourseInstallDecoderService( AvroJsonDecoderPort aDecoder ) {
         decoder = aDecoder
     }
 

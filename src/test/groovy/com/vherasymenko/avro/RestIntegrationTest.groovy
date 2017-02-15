@@ -46,7 +46,7 @@ class RestIntegrationTest extends BaseIntegrationTest {
         '''
 
         when: 'the valid request event is sent through rest'
-        def reportURI = restBaseURI.build().toUri()
+        def reportURI = getRestBaseURI( '/course/install' ).build().toUri()
         def entity = new HttpEntity( requestEvent )
         def createResult = restOperations.postForEntity( reportURI, entity, String )
 
@@ -54,11 +54,46 @@ class RestIntegrationTest extends BaseIntegrationTest {
         createResult.statusCode == HttpStatus.OK
     }
 
-    private UriComponentsBuilder getRestBaseURI() {
+    def 'exercise full workflow for the lesson status'() {
+        given: 'valid rest operations'
+        assert restOperations
+
+        and: 'valid json event'
+        def requestEvent = '''
+            { 
+                "agent": "WEB",                                                       
+                "status" : [
+                    {
+                        "userUuid" : "ccd41244-241c-11e3-8fcc-00ffb08bd008",         
+                        "courseUuid" : "aac41231-241e-11e3-8fbb-00ffb08bd174",        
+                        "unitId" : 80,                                                
+                        "lessonUuid" : "ccd41244-241c-11e3-8fcc-00ffb08bd008",        
+                        "completionStatus" : "IN_PROGRESS",                           
+                        "score": 0,                                                   
+                        "time": 5,                                                    
+                        "markedLearned" : true,                                      
+                        "testedOut" : true,                                           
+                        "unitAssessmentStatus" : "FAILED",                            
+                        "unitAssessmentScore" : 8                                    
+                    }
+                ]
+            }
+        '''
+
+        when: 'the valid request event is sent through rest'
+        def reportURI = getRestBaseURI( '/lesson/status' ).build().toUri()
+        def entity = new HttpEntity( requestEvent )
+        def createResult = restOperations.postForEntity( reportURI, entity, String )
+
+        then: 'the valid response is returned'
+        createResult.statusCode == HttpStatus.OK
+    }
+
+    private UriComponentsBuilder getRestBaseURI( String path ) {
         UriComponentsBuilder.newInstance().
                 scheme( 'http' ).
                 host( 'localhost' ).
                 port( portListener.serverPort ).
-                path( '/course/install' )
+                path( path )
     }
 }

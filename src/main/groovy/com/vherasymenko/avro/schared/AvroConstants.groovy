@@ -9,5 +9,5 @@ class AvroConstants {
 
     public static final String USER_CREATE_CHANNEL = 'user_create_channel'
 
-    public static final String LESSON_INSTALL_CHANNEL = 'lesson_install_channel'
+    public static final String LESSON_STATUS_CHANNEL = 'lesson_status_channel'
 }

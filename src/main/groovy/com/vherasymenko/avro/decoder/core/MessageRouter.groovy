@@ -11,23 +11,23 @@ class MessageRouter implements MessageRouterPort {
 
     private final CourseInstallDecoderPort courseInstallDecoder
 
-    MessageRouter( CourseInstallDecoderPort aCourseInstallDecoder ) {
+    private final LessonStatusDecoderPort lessonStatusDecoder
+
+    MessageRouter( CourseInstallDecoderPort aCourseInstallDecoder, LessonStatusDecoderPort aLessonStatusDecoder ) {
         courseInstallDecoder = aCourseInstallDecoder
+        lessonStatusDecoder = aLessonStatusDecoder
     }
 
     @Override
     void routeEvent( Message eventMessage ) {
         def eventContentType = eventMessage.headers.get( MessageHeaders.CONTENT_TYPE )
-        def eventPayload = eventMessage.payload as String
+        def eventPayload = eventMessage.payload
 
         if ( eventContentType == AvroConstants.COURSE_INSTALL_CHANNEL ) {
-            courseInstallDecoder.decodeCourseInstallEvent( eventPayload )
+            courseInstallDecoder.decodeCourseInstallEvent( eventPayload as String )
         }
-//        else if ( eventContentType == AvroConstants.USER_CREATE_CHANNEL ) {
-//
-//        }
-//        else if ( eventContentType == AvroConstants.LESSON_INSTALL_CHANNEL ) {
-//
-//        }
+        else if ( eventContentType == AvroConstants.LESSON_STATUS_CHANNEL ) {
+            lessonStatusDecoder.decodeLessonInstallEvent( eventPayload as byte[] )
+        }
     }
 }
