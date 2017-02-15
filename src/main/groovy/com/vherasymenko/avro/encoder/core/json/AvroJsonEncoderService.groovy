@@ -22,6 +22,6 @@ class AvroJsonEncoderService implements AvroJsonEncoderPort {
         datumWriter.write( avroData, encoder )
         encoder.flush()
 
-        output.toString()
+        output.toString( 'UTF-8' )
     }
 }
