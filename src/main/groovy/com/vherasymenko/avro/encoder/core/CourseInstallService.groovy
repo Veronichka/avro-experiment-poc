@@ -1,16 +1,20 @@
 package com.vherasymenko.avro.encoder.core
 
+import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderPort
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
+import com.vherasymenko.avro.schared.AvroConstants
+import com.vherasymenko.avro.schared.MessageHeaders
 import event.course_install.Course
 import event.course_install.CourseInstall
 import event.course_install.Lesson
 import event.course_install.Unit
 import groovy.json.JsonSlurper
+import org.springframework.messaging.support.MessageBuilder
 
 /**
  * Service that encodes course install document.
  */
-class CourseInstallEncoderService implements CourseInstallEncoderPort {
+class CourseInstallService implements CourseInstallPort {
 
     /**
      * The gateway to the messaging system.
@@ -20,15 +24,15 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
     /**
      * The avro json encoder.
      */
-    private final AvroEncoderPort encoder
+    private final AvroJsonEncoderPort encoder
 
-    CourseInstallEncoderService( MessageProducer aProducer, AvroEncoderPort anEncoder ) {
+    CourseInstallService( MessageProducer aProducer, AvroJsonEncoderPort anEncoder ) {
         producer = aProducer
         encoder = anEncoder
     }
 
     @Override
-    void encodeEvent( String event ) {
+    void handleEvent( String event ) {
         def schema = CourseInstall.classSchema
 
         def jsonParser = new JsonSlurper()
@@ -69,10 +73,13 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
         avroData.setCourse( course )
         avroData.setUnits( units )
 
-        // encode document using avro
+        // encode document using avro json encoding
         def encodedDocument = encoder.encodeEvent( schema, avroData, CourseInstall.class )
 
         // send encoded document to the messaging system
-        producer.sendMessage( encodedDocument )
+        def message = MessageBuilder.withPayload( encodedDocument )
+                .setHeader( MessageHeaders.CONTENT_TYPE,  AvroConstants.COURSE_INSTALL_CHANNEL )
+                .build()
+        producer.sendMessage( message )
     }
 }

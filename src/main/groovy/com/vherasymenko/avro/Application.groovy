@@ -1,12 +1,24 @@
 
 package com.vherasymenko.avro
 
-import com.vherasymenko.avro.decoder.core.AvroDecoderPort
-import com.vherasymenko.avro.decoder.core.AvroDecoderService
-import com.vherasymenko.avro.encoder.core.AvroEncoderPort
-import com.vherasymenko.avro.encoder.core.AvroEncoderService
-import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
-import com.vherasymenko.avro.encoder.core.CourseInstallEncoderService
+import com.vherasymenko.avro.decoder.core.CourseInstallDecoderPort
+import com.vherasymenko.avro.decoder.core.CourseInstallDecoderService
+import com.vherasymenko.avro.decoder.core.LessonStatusDecoderPort
+import com.vherasymenko.avro.decoder.core.LessonStatusDecoderService
+import com.vherasymenko.avro.decoder.core.binary.AvroBinaryDecoderPort
+import com.vherasymenko.avro.decoder.core.binary.AvroBinaryDecoderService
+import com.vherasymenko.avro.decoder.core.json.AvroJsonDecoderPort
+import com.vherasymenko.avro.decoder.core.json.AvroJsonDecoderService
+import com.vherasymenko.avro.decoder.core.MessageRouter
+import com.vherasymenko.avro.decoder.core.MessageRouterPort
+import com.vherasymenko.avro.encoder.core.binary.AvroBinaryEncoderPort
+import com.vherasymenko.avro.encoder.core.binary.AvroBinaryEncoderService
+import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderService
+import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderPort
+import com.vherasymenko.avro.encoder.core.CourseInstallPort
+import com.vherasymenko.avro.encoder.core.CourseInstallService
+import com.vherasymenko.avro.encoder.core.LessonStatusPort
+import com.vherasymenko.avro.encoder.core.LessonStatusService
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -43,18 +55,52 @@ class Application {
         bean
     }
 
+    // Encoder
+
     @Bean
-    AvroEncoderPort avroEncoderPort() {
-        new AvroEncoderService()
+    AvroJsonEncoderPort avroEncoderPort() {
+        new AvroJsonEncoderService()
     }
 
     @Bean
-    AvroDecoderPort avroDecoderPort() {
-        new AvroDecoderService()
+    AvroBinaryEncoderPort avroBinaryEncoder() {
+        new AvroBinaryEncoderService()
     }
 
     @Bean
-    CourseInstallEncoderPort courseInstallEncoderPort( MessageProducer producer, AvroEncoderPort encoder ) {
-        new CourseInstallEncoderService( producer, encoder )
+    CourseInstallPort courseInstallEncoder( MessageProducer producer, AvroJsonEncoderPort encoder ) {
+        new CourseInstallService( producer, encoder )
+    }
+
+    @Bean
+    LessonStatusPort lessonStatusEncoder( MessageProducer producer, AvroBinaryEncoderPort encoder ) {
+        new LessonStatusService( producer, encoder )
+    }
+
+    // Decoder
+
+    @Bean
+    AvroJsonDecoderPort avroDecoderPort() {
+        new AvroJsonDecoderService()
+    }
+
+    @Bean
+    AvroBinaryDecoderPort avroBinaryDecoder() {
+        new AvroBinaryDecoderService()
+    }
+
+    @Bean
+     CourseInstallDecoderPort courseInstallDecoder( AvroJsonDecoderPort decoder ) {
+        new CourseInstallDecoderService( decoder )
+    }
+
+    @Bean
+    LessonStatusDecoderPort lessonStatusDecoder( AvroBinaryDecoderPort decoder ) {
+        new LessonStatusDecoderService( decoder )
+    }
+
+    @Bean
+    MessageRouterPort messageRouter( CourseInstallDecoderPort courseInstallDecoder, LessonStatusDecoderPort lessonStatusDecoder ) {
+        new MessageRouter( courseInstallDecoder, lessonStatusDecoder )
     }
 }

@@ -3,7 +3,7 @@ package com.vherasymenko.avro.encoder.core
 /**
  * Port to the course install document encoder service.
  */
-interface CourseInstallEncoderPort {
+interface CourseInstallPort {
 
-    void encodeEvent( String event )
+    void handleEvent( String event )
 }

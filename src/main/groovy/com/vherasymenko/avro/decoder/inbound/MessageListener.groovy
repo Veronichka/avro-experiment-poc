@@ -1,10 +1,11 @@
 package com.vherasymenko.avro.decoder.inbound
 
-import com.vherasymenko.avro.decoder.core.AvroDecoderPort
+import com.vherasymenko.avro.decoder.core.MessageRouterPort
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.stream.annotation.EnableBinding
 import org.springframework.cloud.stream.annotation.StreamListener
 import org.springframework.cloud.stream.messaging.Sink
+import org.springframework.messaging.Message
 import org.springframework.stereotype.Component
 
 /**
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Component
 class MessageListener {
 
     @Autowired
-    AvroDecoderPort decoder
+    MessageRouterPort router
 
     @StreamListener( Sink.INPUT )
-    void handleMessage( final String message ) {
-        decoder.decodeEvent( message )
+    void handleMessage( final Message message ) {
+        router.routeEvent( message )
     }
 }

@@ -1,0 +1,14 @@
+{
+"namespace": "event.lesson_status",
+"type": "record",
+"name": "LessonStatus",
+"fields": [
+    {"name": "agent", "type": {"type": "enum", "name": "Agent", "symbols": ["WEB", "DESKTOP", "MOBILE"]}},
+    {"name": "status",
+     "type": {
+         "type": "array",
+         "items": "event.lesson_status.LessonStatusItem"
+        }
+    }
+    ]
+}
