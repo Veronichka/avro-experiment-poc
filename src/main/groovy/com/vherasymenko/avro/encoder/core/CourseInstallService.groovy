@@ -9,11 +9,13 @@ import event.course_install.CourseInstall
 import event.course_install.Lesson
 import event.course_install.Unit
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.springframework.messaging.support.MessageBuilder
 
 /**
  * Service that encodes course install document.
  */
+@Slf4j
 class CourseInstallService implements CourseInstallPort {
 
     /**
@@ -34,6 +36,7 @@ class CourseInstallService implements CourseInstallPort {
     @Override
     void handleEvent( String event ) {
         def schema = CourseInstall.classSchema
+        log.info( 'The avro schema for event encoding : ' + schema.toString( true ) )
 
         def jsonParser = new JsonSlurper()
         def jsonData = jsonParser.parseText( event )

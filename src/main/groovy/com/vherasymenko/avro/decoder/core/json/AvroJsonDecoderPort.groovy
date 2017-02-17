@@ -7,5 +7,5 @@ import org.apache.avro.Schema
  */
 interface AvroJsonDecoderPort {
 
-    void decodeEvent( Schema schema, String event )
+    void decodeEvent( Schema schema, Schema newSchema, String event )
 }

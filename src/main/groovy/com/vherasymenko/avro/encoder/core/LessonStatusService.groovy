@@ -5,6 +5,7 @@ import com.vherasymenko.avro.encoder.outbound.MessageProducer
 import com.vherasymenko.avro.schared.AvroConstants
 import com.vherasymenko.avro.schared.MessageHeaders
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
@@ -14,6 +15,7 @@ import org.springframework.messaging.support.MessageBuilder
  * Service that encodes lesson status document. Also uses GenericRecord that works without code generation.
  * This service uses nested schemas as well.
  */
+@Slf4j
 class LessonStatusService implements LessonStatusPort {
 
     /**
@@ -36,6 +38,7 @@ class LessonStatusService implements LessonStatusPort {
         def parser = new Schema.Parser()
         def innerSchema = parser.parse( new File( 'src/main/avro/lessonStatusItem.avsc' ) )
         def mainSchema = parser.parse( new File( 'src/main/avro/lesson_status.avsc' ) )
+        log.info( 'The avro schema for event encoding : ' + mainSchema.toString( true ) )
 
         def jsonParser = new JsonSlurper()
         def jsonData = jsonParser.parseText( event )

@@ -1,5 +1,6 @@
 package com.vherasymenko.avro.encoder.core.binary
 
+import groovy.util.logging.Slf4j
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericDatumWriter
 import org.apache.avro.generic.GenericRecord
@@ -8,6 +9,7 @@ import org.apache.avro.io.EncoderFactory
 /**
  * The avro binary encoder.
  */
+@Slf4j
 class AvroBinaryEncoderService implements AvroBinaryEncoderPort {
 
     @Override
@@ -19,7 +21,7 @@ class AvroBinaryEncoderService implements AvroBinaryEncoderPort {
 
         def output = new ByteArrayOutputStream()
         def encoder = EncoderFactory.get().binaryEncoder( output, null )
-
+        log.info( 'Avro binary encoding.' )
         datumWriter.write( avroData, encoder )
         encoder.flush()
 
