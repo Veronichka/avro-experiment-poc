@@ -5,5 +5,5 @@ package com.vherasymenko.avro.decoder.core
  */
 interface LessonStatusDecoderPort {
 
-    void decodeLessonInstallEvent( byte[] event )
+    void decodeLessonInstallEvent( byte[] event, int schemaId )
 }

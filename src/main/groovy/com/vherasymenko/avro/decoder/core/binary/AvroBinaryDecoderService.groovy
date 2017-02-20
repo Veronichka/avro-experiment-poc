@@ -17,7 +17,8 @@ class AvroBinaryDecoderService implements AvroBinaryDecoderPort {
     void decodeEvent( Schema schema, byte[] event ) {
         def decoder = new DecoderFactory().binaryDecoder( event, null )
         DatumReader<GenericRecord> reader = new GenericDatumReader<>( schema )
-        def document = reader.read( null, decoder )
+        def reuse = null // if reuse is provided, it will be reinitialized to the given input stream
+        def document = reader.read( reuse, decoder )
         log.info( 'Decoded document with binary avro decoder: ' + document )
     }
 }

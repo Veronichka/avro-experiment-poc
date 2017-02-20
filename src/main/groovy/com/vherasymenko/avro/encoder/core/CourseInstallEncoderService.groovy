@@ -29,6 +29,9 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
      */
     private final AvroJsonEncoderPort encoder
 
+    /**
+     * The avro schema registry client.
+     */
     private final SchemaRegistryClient registryClient
 
     CourseInstallEncoderService(MessageProducer aProducer, AvroJsonEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
@@ -83,8 +86,11 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
         // encode document using avro json encoding
         def encodedDocument = encoder.encodeEvent( schema, avroData, CourseInstall.class )
 
-        // save schema in the schema registry server
-        def schemaId = registryClient.register( schema.name, 'avro', schema.toString() ).id
+        // save schema to the schema registry server
+        def registryResponse = registryClient.register( schema.name, 'avro', schema.toString() )
+        log.info( "The schema with subject ${registryResponse.schemaReference.subject} was saved to the schema registry " +
+                "with the id ${registryResponse.id}." )
+        def schemaId = registryResponse.id
 
         // send encoded document to the messaging system
         def message = MessageBuilder.withPayload( encodedDocument )

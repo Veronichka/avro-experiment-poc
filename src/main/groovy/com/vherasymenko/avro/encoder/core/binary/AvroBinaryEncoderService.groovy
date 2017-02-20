@@ -20,7 +20,8 @@ class AvroBinaryEncoderService implements AvroBinaryEncoderPort {
         def datumWriter = new GenericDatumWriter( schema )
 
         def output = new ByteArrayOutputStream()
-        def encoder = EncoderFactory.get().binaryEncoder( output, null )
+        def reuse = null // if reuse is provided, it will be reinitialized to the given input stream
+        def encoder = EncoderFactory.get().binaryEncoder( output, reuse )
         log.info( 'Avro binary encoding.' )
         datumWriter.write( avroData, encoder )
         encoder.flush()

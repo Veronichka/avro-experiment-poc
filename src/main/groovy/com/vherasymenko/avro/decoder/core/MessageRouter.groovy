@@ -38,7 +38,7 @@ class MessageRouter implements MessageRouterPort {
         }
         else if ( eventContentType == AvroConstants.LESSON_STATUS_CHANNEL ) {
             log.info( 'The message is sent to the ' + AvroConstants.LESSON_STATUS_CHANNEL )
-            lessonStatusDecoder.decodeLessonInstallEvent( eventPayload as byte[] )
+            lessonStatusDecoder.decodeLessonInstallEvent( eventPayload as byte[], schemaId )
         }
     }
 }

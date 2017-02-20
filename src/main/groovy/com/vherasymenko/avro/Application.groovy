@@ -80,8 +80,8 @@ class Application {
     }
 
     @Bean
-    LessonStatusEncoderPort lessonStatusEncoder(MessageProducer producer, AvroBinaryEncoderPort encoder ) {
-        new LessonStatusEncoderService( producer, encoder )
+    LessonStatusEncoderPort lessonStatusEncoder( MessageProducer producer, AvroBinaryEncoderPort encoder, SchemaRegistryClient registryClient ) {
+        new LessonStatusEncoderService( producer, encoder, registryClient )
     }
 
     // Decoder
@@ -102,8 +102,8 @@ class Application {
     }
 
     @Bean
-    LessonStatusDecoderPort lessonStatusDecoder( AvroBinaryDecoderPort decoder ) {
-        new LessonStatusDecoderService( decoder )
+    LessonStatusDecoderPort lessonStatusDecoder( AvroBinaryDecoderPort decoder, SchemaRegistryClient registryClient ) {
+        new LessonStatusDecoderService( decoder, registryClient )
     }
 
     @Bean
