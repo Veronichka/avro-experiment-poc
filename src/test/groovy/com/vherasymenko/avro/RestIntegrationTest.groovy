@@ -1,5 +1,8 @@
 package com.vherasymenko.avro
 
+import org.apache.avro.Schema
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.web.util.UriComponentsBuilder
@@ -8,6 +11,9 @@ import org.springframework.web.util.UriComponentsBuilder
  * The integration test to the full encoder work flow.
  */
 class RestIntegrationTest extends BaseIntegrationTest {
+
+    @Autowired
+    SchemaRegistryClient registryClient
 
     def 'exercise full workflow for the course install'() {
         given: 'valid rest operations'
@@ -87,6 +93,18 @@ class RestIntegrationTest extends BaseIntegrationTest {
 
         then: 'the valid response is returned'
         createResult.statusCode == HttpStatus.OK
+    }
+
+    def 'exercise schema registry client'() {
+        given: 'valid schema'
+        def schema = new Schema.Parser().parse( new File( 'src/main/avro/course_install.avsc' ) )
+
+        when: 'register schema in the schema registry'
+        def schemaId = registryClient.register( schema.name, 'avro', schema.toString() ).id
+
+        then: 'the schema is successfully retrieved from the registry server'
+        def fetchedSchema = registryClient.fetch( schemaId )
+        fetchedSchema == schema.toString()
     }
 
     private UriComponentsBuilder getRestBaseURI( String path ) {

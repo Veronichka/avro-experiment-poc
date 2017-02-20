@@ -1,7 +1,7 @@
 package com.vherasymenko.avro.encoder.inbound
 
-import com.vherasymenko.avro.encoder.core.CourseInstallPort
-import com.vherasymenko.avro.encoder.core.LessonStatusPort
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
+import com.vherasymenko.avro.encoder.core.LessonStatusEncoderPort
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -21,15 +21,15 @@ class RestGateway {
     /**
      * The handler for the course install event.
      */
-    private final CourseInstallPort courseInstallEncoder
+    private final CourseInstallEncoderPort courseInstallEncoder
 
     /**
      * The handler for the lesson status event.
      */
-    private final LessonStatusPort lessonInstallEncoder
+    private final LessonStatusEncoderPort lessonInstallEncoder
 
     @Autowired
-    RestGateway(CourseInstallPort aCourseInstallEncoder, LessonStatusPort aLessonInstallEncoder ) {
+    RestGateway(CourseInstallEncoderPort aCourseInstallEncoder, LessonStatusEncoderPort aLessonInstallEncoder ) {
         courseInstallEncoder = aCourseInstallEncoder
         lessonInstallEncoder = aLessonInstallEncoder
     }

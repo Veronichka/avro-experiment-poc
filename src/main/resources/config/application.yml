@@ -29,6 +29,10 @@ spring:
           password: guest
           virtual-host: /
 
+confluent:
+  schemaregistry:
+    endpoint: http://localhost:8081
+
 management:
     contextPath: /operations
     security:

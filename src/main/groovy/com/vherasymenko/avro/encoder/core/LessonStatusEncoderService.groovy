@@ -16,7 +16,7 @@ import org.springframework.messaging.support.MessageBuilder
  * This service uses nested schemas as well.
  */
 @Slf4j
-class LessonStatusService implements LessonStatusPort {
+class LessonStatusEncoderService implements LessonStatusEncoderPort {
 
     /**
      * The gateway to the messaging system.
@@ -28,7 +28,7 @@ class LessonStatusService implements LessonStatusPort {
      */
     private final AvroBinaryEncoderPort encoder
 
-    LessonStatusService( MessageProducer aProducer, AvroBinaryEncoderPort anEncoder ) {
+    LessonStatusEncoderService(MessageProducer aProducer, AvroBinaryEncoderPort anEncoder ) {
         producer = aProducer
         encoder = anEncoder
     }

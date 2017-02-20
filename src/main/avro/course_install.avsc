@@ -10,7 +10,7 @@
              "name": "Course",
              "fields": [
                 {"name": "uuid", "type": "string"},
-                {"name": "name", "type": "string"},
+                {"name": "name", "type": "string", "aliases": ["courseName"]},
                 {"name": "knownLanguage", "type": "string"},
                 {"name": "targetLanguage", "type": "string"},
                 {"name": "product", "type": "string"}
@@ -24,7 +24,7 @@
                 "type": "record",
                 "name": "Unit",
                 "fields": [
-                    {"name": "id", "type": "int"},
+                    {"name": "id", "type": "int", "default": 0},
                     {"name": "uuid", "type": "string"},
                     {"name": "name", "type": "string"},
                     {"name": "maxScore", "type": "int"},

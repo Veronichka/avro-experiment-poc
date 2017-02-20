@@ -15,16 +15,18 @@ import com.vherasymenko.avro.encoder.core.binary.AvroBinaryEncoderPort
 import com.vherasymenko.avro.encoder.core.binary.AvroBinaryEncoderService
 import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderService
 import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderPort
-import com.vherasymenko.avro.encoder.core.CourseInstallPort
-import com.vherasymenko.avro.encoder.core.CourseInstallService
-import com.vherasymenko.avro.encoder.core.LessonStatusPort
-import com.vherasymenko.avro.encoder.core.LessonStatusService
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
+import com.vherasymenko.avro.encoder.core.CourseInstallEncoderService
+import com.vherasymenko.avro.encoder.core.LessonStatusEncoderPort
+import com.vherasymenko.avro.encoder.core.LessonStatusEncoderService
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.stream.schema.client.ConfluentSchemaRegistryClient
+import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.context.annotation.Bean
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.client.RestOperations
@@ -39,6 +41,11 @@ class Application {
 
     static void main( String[] args ) {
         SpringApplication.run( Application, args )
+    }
+
+    @Bean
+    SchemaRegistryClient registryClient() {
+        new ConfluentSchemaRegistryClient()
     }
 
     @Bean
@@ -68,13 +75,13 @@ class Application {
     }
 
     @Bean
-    CourseInstallPort courseInstallEncoder( MessageProducer producer, AvroJsonEncoderPort encoder ) {
-        new CourseInstallService( producer, encoder )
+    CourseInstallEncoderPort courseInstallEncoder( MessageProducer producer, AvroJsonEncoderPort encoder, SchemaRegistryClient registryClient ) {
+        new CourseInstallEncoderService( producer, encoder, registryClient )
     }
 
     @Bean
-    LessonStatusPort lessonStatusEncoder( MessageProducer producer, AvroBinaryEncoderPort encoder ) {
-        new LessonStatusService( producer, encoder )
+    LessonStatusEncoderPort lessonStatusEncoder(MessageProducer producer, AvroBinaryEncoderPort encoder ) {
+        new LessonStatusEncoderService( producer, encoder )
     }
 
     // Decoder
@@ -90,8 +97,8 @@ class Application {
     }
 
     @Bean
-     CourseInstallDecoderPort courseInstallDecoder( AvroJsonDecoderPort decoder ) {
-        new CourseInstallDecoderService( decoder )
+     CourseInstallDecoderPort courseInstallDecoder( AvroJsonDecoderPort decoder, SchemaRegistryClient registryClient ) {
+        new CourseInstallDecoderService( decoder, registryClient )
     }
 
     @Bean

@@ -6,4 +6,6 @@ package com.vherasymenko.avro.schared
 class MessageHeaders {
 
     public static final String CONTENT_TYPE = 'Content-Type'
+
+    public static final String SCHEMA_ID = 'Schema-Id'
 }

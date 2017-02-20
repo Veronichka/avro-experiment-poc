@@ -10,13 +10,14 @@ import event.course_install.Lesson
 import event.course_install.Unit
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.messaging.support.MessageBuilder
 
 /**
  * Service that encodes course install document.
  */
 @Slf4j
-class CourseInstallService implements CourseInstallPort {
+class CourseInstallEncoderService implements CourseInstallEncoderPort {
 
     /**
      * The gateway to the messaging system.
@@ -28,9 +29,12 @@ class CourseInstallService implements CourseInstallPort {
      */
     private final AvroJsonEncoderPort encoder
 
-    CourseInstallService( MessageProducer aProducer, AvroJsonEncoderPort anEncoder ) {
+    private final SchemaRegistryClient registryClient
+
+    CourseInstallEncoderService(MessageProducer aProducer, AvroJsonEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
         producer = aProducer
         encoder = anEncoder
+        registryClient = aRegistryClient
     }
 
     @Override
@@ -79,9 +83,13 @@ class CourseInstallService implements CourseInstallPort {
         // encode document using avro json encoding
         def encodedDocument = encoder.encodeEvent( schema, avroData, CourseInstall.class )
 
+        // save schema in the schema registry server
+        def schemaId = registryClient.register( schema.name, 'avro', schema.toString() ).id
+
         // send encoded document to the messaging system
         def message = MessageBuilder.withPayload( encodedDocument )
                 .setHeader( MessageHeaders.CONTENT_TYPE,  AvroConstants.COURSE_INSTALL_CHANNEL )
+                .setHeader( MessageHeaders.SCHEMA_ID, schemaId )
                 .build()
         producer.sendMessage( message )
     }

@@ -11,8 +11,14 @@ import org.springframework.messaging.Message
 @Slf4j
 class MessageRouter implements MessageRouterPort {
 
+    /**
+     * Handles course install document decoding.
+     */
     private final CourseInstallDecoderPort courseInstallDecoder
 
+    /**
+     * Handles lesson install document decoding.
+     */
     private final LessonStatusDecoderPort lessonStatusDecoder
 
     MessageRouter( CourseInstallDecoderPort aCourseInstallDecoder, LessonStatusDecoderPort aLessonStatusDecoder ) {
@@ -23,11 +29,12 @@ class MessageRouter implements MessageRouterPort {
     @Override
     void routeEvent( Message eventMessage ) {
         def eventContentType = eventMessage.headers.get( MessageHeaders.CONTENT_TYPE )
+        def schemaId = eventMessage.headers.get( MessageHeaders.SCHEMA_ID ) as int
         def eventPayload = eventMessage.payload
 
         if ( eventContentType == AvroConstants.COURSE_INSTALL_CHANNEL ) {
             log.info( 'The message is sent to the ' + AvroConstants.COURSE_INSTALL_CHANNEL )
-            courseInstallDecoder.decodeCourseInstallEvent( eventPayload as String )
+            courseInstallDecoder.decodeCourseInstallEvent( eventPayload as String, schemaId )
         }
         else if ( eventContentType == AvroConstants.LESSON_STATUS_CHANNEL ) {
             log.info( 'The message is sent to the ' + AvroConstants.LESSON_STATUS_CHANNEL )
