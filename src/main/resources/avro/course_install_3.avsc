@@ -2,7 +2,7 @@
 "namespace": "event.course_install",
 "type": "record",
 "name": "CourseInstall",
-"doc": "The second version of the course install document",
+"doc": "The invalid third version of the course install document",
 "fields": [
         {"name": "course",
          "type": {

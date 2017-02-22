@@ -100,6 +100,30 @@ class TestSteps {
         '''
     }
 
+    @Given( '^valid lesson status event$' )
+    void 'valid lesson status event'() {
+        sharedState.requestEvent = '''
+            { 
+                "agent": "WEB",                                                       
+                "status" : [
+                    {
+                        "userUuid" : "ccd41244-241c-11e3-8fcc-00ffb08bd008",         
+                        "courseUuid" : "aac41231-241e-11e3-8fbb-00ffb08bd174",        
+                        "unitId" : 80,                                                
+                        "lessonUuid" : "ccd41244-241c-11e3-8fcc-00ffb08bd008",        
+                        "completionStatus" : "IN_PROGRESS",                           
+                        "score": 0,                                                   
+                        "time": 5,                                                    
+                        "markedLearned" : true,                                      
+                        "testedOut" : true,                                           
+                        "unitAssessmentStatus" : "FAILED",                            
+                        "unitAssessmentScore" : 8                                    
+                    }
+                ]
+            }
+        '''
+    }
+
     @Given( '^valid path (.*)$' )
     void 'valid path'( String restPath ) {
         sharedState.eventPath = restPath
