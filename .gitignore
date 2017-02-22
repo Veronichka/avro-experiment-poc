@@ -3,3 +3,4 @@ build
 docker/artifacts
 .idea/workspace.xml
 .idea
+logs/

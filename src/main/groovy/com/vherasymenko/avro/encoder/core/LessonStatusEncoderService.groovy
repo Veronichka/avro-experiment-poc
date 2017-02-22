@@ -34,7 +34,6 @@ class LessonStatusEncoderService implements LessonStatusEncoderPort {
      */
     private final SchemaRegistryClient registryClient
 
-
     LessonStatusEncoderService( MessageProducer aProducer, AvroBinaryEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
         producer = aProducer
         encoder = anEncoder
@@ -81,12 +80,11 @@ class LessonStatusEncoderService implements LessonStatusEncoderPort {
         def registryResponse = registryClient.register( mainSchema.name, 'avro', mainSchema.toString() )
         log.info( "The schema with subject ${registryResponse.schemaReference.subject} was saved to the schema registry " +
                 "with the id ${registryResponse.id}." )
-        def schemaId = registryResponse.id
 
         // send encoded document to the messaging system
         def message = MessageBuilder.withPayload( encodedDocument )
                 .setHeader( MessageHeaders.CONTENT_TYPE, AvroConstants.LESSON_STATUS_CHANNEL )
-                .setHeader( MessageHeaders.SCHEMA_ID, schemaId )
+                .setHeader( MessageHeaders.SCHEMA_ID, registryResponse.id )
                 .build()
         producer.sendMessage( message )
     }

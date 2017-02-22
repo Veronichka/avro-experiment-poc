@@ -5,5 +5,5 @@ package com.vherasymenko.avro.encoder.core
  */
 interface CourseInstallEncoderPort {
 
-    void handleEvent( String event )
+    void handleEvent( String event, String processChannelName )
 }

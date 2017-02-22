@@ -2,6 +2,8 @@ package com.vherasymenko.avro.encoder.inbound
 
 import com.vherasymenko.avro.encoder.core.CourseInstallEncoderPort
 import com.vherasymenko.avro.encoder.core.LessonStatusEncoderPort
+import com.vherasymenko.avro.schared.AvroConstants
+import com.vherasymenko.avro.schared.RestConstants
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @Slf4j
 @RestController
-@RequestMapping( '/' )
+@RequestMapping( RestConstants.REPORT )
 class RestGateway {
 
     /**
@@ -34,14 +36,28 @@ class RestGateway {
         lessonInstallEncoder = aLessonInstallEncoder
     }
 
-    @RequestMapping( path = 'course/install', method = [RequestMethod.POST] )
-    ResponseEntity<String> serializeCourseInstall( @RequestBody String requestEvent ) {
-        log.info( 'Received POST request to course/install with content: ' + requestEvent )
-        courseInstallEncoder.handleEvent( requestEvent )
+    @RequestMapping( path = RestConstants.COURSE_INSTALL_V1_TO_V1, method = [RequestMethod.POST] )
+    ResponseEntity<String> serializeCourseInstallV1ToV1( @RequestBody String requestEvent ) {
+        log.info( "Received POST request to the ${RestConstants.COURSE_INSTALL_V1_TO_V1} with content: " + requestEvent )
+        courseInstallEncoder.handleEvent( requestEvent, AvroConstants.COURSE_INSTALL_V1_TO_V1_CHANNEL )
         ResponseEntity.ok( 'The encoded course install event is sent to the messaging system.' )
     }
 
-    @RequestMapping( path = 'lesson/status', method = [RequestMethod.POST] )
+    @RequestMapping( path = RestConstants.COURSE_INSTALL_V1_TO_V2, method = [RequestMethod.POST] )
+    ResponseEntity<String> serializeCourseInstallV1ToV2( @RequestBody String requestEvent ) {
+        log.info( "Received POST request to the ${RestConstants.COURSE_INSTALL_V1_TO_V2} with content: " + requestEvent )
+        courseInstallEncoder.handleEvent( requestEvent, AvroConstants.COURSE_INSTALL_V1_TO_V2_CHANNEL )
+        ResponseEntity.ok( 'The encoded course install event is sent to the messaging system.' )
+    }
+
+    @RequestMapping( path = RestConstants.COURSE_INSTAL_V1_TO_V3, method = [RequestMethod.POST] )
+    ResponseEntity<String> serializeCourseInstallV1ToV3( @RequestBody String requestEvent ) {
+        log.info( "Received POST request to the ${RestConstants.COURSE_INSTAL_V1_TO_V3} with content: " + requestEvent )
+        courseInstallEncoder.handleEvent( requestEvent, AvroConstants.COURSE_INSTALL_V1_TO_V3_CHANNEL )
+        ResponseEntity.ok( 'The encoded course install event is sent to the messaging system.' )
+    }
+
+    @RequestMapping( path = RestConstants.LESSON_STATUS, method = [RequestMethod.POST] )
     ResponseEntity<String> serializeLessonInstall( @RequestBody String requestEvent ) {
         log.info( 'Received POST request to status/lesson with content: ' + requestEvent )
         lessonInstallEncoder.handleEvent( requestEvent )

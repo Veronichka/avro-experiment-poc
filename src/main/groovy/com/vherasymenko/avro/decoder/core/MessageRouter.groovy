@@ -32,13 +32,24 @@ class MessageRouter implements MessageRouterPort {
         def schemaId = eventMessage.headers.get( MessageHeaders.SCHEMA_ID ) as int
         def eventPayload = eventMessage.payload
 
-        if ( eventContentType == AvroConstants.COURSE_INSTALL_CHANNEL ) {
-            log.info( 'The message is sent to the ' + AvroConstants.COURSE_INSTALL_CHANNEL )
-            courseInstallDecoder.decodeCourseInstallEvent( eventPayload as String, schemaId )
+        if ( eventContentType == AvroConstants.COURSE_INSTALL_V1_TO_V1_CHANNEL ) {
+            log.info( 'The message is sent to the ' + AvroConstants.COURSE_INSTALL_V1_TO_V1_CHANNEL )
+            courseInstallDecoder.decodeCourseInstallV1ToV1( eventPayload as String, schemaId )
+        }
+        else if ( eventContentType == AvroConstants.COURSE_INSTALL_V1_TO_V2_CHANNEL ) {
+            log.info( 'The message is sent to the ' + AvroConstants.COURSE_INSTALL_V1_TO_V2_CHANNEL )
+            courseInstallDecoder.decodeCourseInstallV1ToV2( eventPayload as String, schemaId )
+        }
+        else if ( eventContentType == AvroConstants.COURSE_INSTALL_V1_TO_V3_CHANNEL ) {
+            log.info( 'The message is sent to the ' + AvroConstants.COURSE_INSTALL_V1_TO_V3_CHANNEL )
+            courseInstallDecoder.decodeCourseInstallV1ToV3( eventPayload as String, schemaId )
         }
         else if ( eventContentType == AvroConstants.LESSON_STATUS_CHANNEL ) {
             log.info( 'The message is sent to the ' + AvroConstants.LESSON_STATUS_CHANNEL )
             lessonStatusDecoder.decodeLessonInstallEvent( eventPayload as byte[], schemaId )
+        }
+        else {
+            log.warn( "The subscribed channel ${eventContentType} was not specified in the message router. The message was dropped." )
         }
     }
 }

@@ -6,6 +6,8 @@ import org.apache.avro.generic.GenericDatumWriter
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.io.EncoderFactory
 
+import static com.vherasymenko.avro.schared.AvroConstants.DO_NOT_REUSE_STREAM
+
 /**
  * The avro binary encoder.
  */
@@ -20,8 +22,7 @@ class AvroBinaryEncoderService implements AvroBinaryEncoderPort {
         def datumWriter = new GenericDatumWriter( schema )
 
         def output = new ByteArrayOutputStream()
-        def reuse = null // if reuse is provided, it will be reinitialized to the given input stream
-        def encoder = EncoderFactory.get().binaryEncoder( output, reuse )
+        def encoder = EncoderFactory.get().binaryEncoder( output, DO_NOT_REUSE_STREAM )
         log.info( 'Avro binary encoding.' )
         datumWriter.write( avroData, encoder )
         encoder.flush()

@@ -5,5 +5,9 @@ package com.vherasymenko.avro.decoder.core
  */
 interface CourseInstallDecoderPort {
 
-    void decodeCourseInstallEvent( String event, int schemaId )
+    void decodeCourseInstallV1ToV1( String event, int schemaId )
+
+    void decodeCourseInstallV1ToV2( String event, int schemaId )
+
+    void decodeCourseInstallV1ToV3( String event, int schemaId )
 }
