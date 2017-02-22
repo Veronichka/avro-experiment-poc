@@ -1,5 +1,6 @@
 package com.vherasymenko.avro.encoder.core.json
 
+import groovy.util.logging.Slf4j
 import org.apache.avro.Schema
 import org.apache.avro.io.EncoderFactory
 import org.apache.avro.specific.SpecificDatumWriter
@@ -7,6 +8,7 @@ import org.apache.avro.specific.SpecificDatumWriter
 /**
  * The avro json encoder.
  */
+@Slf4j
 class AvroJsonEncoderService implements AvroJsonEncoderPort {
 
     @Override
@@ -18,7 +20,7 @@ class AvroJsonEncoderService implements AvroJsonEncoderPort {
 
         def output = new ByteArrayOutputStream()
         def encoder = EncoderFactory.get().jsonEncoder( schema, output, true )
-
+        log.info( 'Avro json encoding.' )
         datumWriter.write( avroData, encoder )
         encoder.flush()
 

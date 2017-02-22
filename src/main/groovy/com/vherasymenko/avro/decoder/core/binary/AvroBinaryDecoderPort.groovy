@@ -7,5 +7,5 @@ import org.apache.avro.Schema
  */
 interface AvroBinaryDecoderPort {
 
-    void decodeEvent(Schema schema, byte[] event )
+    void decodeEvent( Schema schema, byte[] event )
 }

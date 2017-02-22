@@ -2,7 +2,7 @@
 "namespace": "event.course_install",
 "type": "record",
 "name": "CourseInstall",
-"doc": "The first version of the course install document",
+"doc": "The second version of the course install document",
 "fields": [
         {"name": "course",
          "type": {
@@ -10,7 +10,7 @@
              "name": "Course",
              "fields": [
                 {"name": "uuid", "type": "string"},
-                {"name": "name", "type": "string", "aliases": ["courseName"]},
+                {"name": "courseName", "type": "string", "aliases": ["name"]},
                 {"name": "knownLanguage", "type": "string"},
                 {"name": "targetLanguage", "type": "string"},
                 {"name": "product", "type": "string"}
@@ -24,7 +24,6 @@
                 "type": "record",
                 "name": "Unit",
                 "fields": [
-                    {"name": "id", "type": "int", "default": 0},
                     {"name": "uuid", "type": "string"},
                     {"name": "name", "type": "string"},
                     {"name": "maxScore", "type": "int"},
@@ -45,7 +44,8 @@
                                 ]
                             }
                         }
-                    }
+                    },
+                    {"name": "newField", "type": "string", "default": "default value for new string"}
                     ]
                 }
             }

@@ -9,12 +9,15 @@ import event.course_install.CourseInstall
 import event.course_install.Lesson
 import event.course_install.Unit
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
+import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.messaging.support.MessageBuilder
 
 /**
  * Service that encodes course install document.
  */
-class CourseInstallService implements CourseInstallPort {
+@Slf4j
+class CourseInstallEncoderService implements CourseInstallEncoderPort {
 
     /**
      * The gateway to the messaging system.
@@ -26,14 +29,21 @@ class CourseInstallService implements CourseInstallPort {
      */
     private final AvroJsonEncoderPort encoder
 
-    CourseInstallService( MessageProducer aProducer, AvroJsonEncoderPort anEncoder ) {
+    /**
+     * The avro schema registry client.
+     */
+    private final SchemaRegistryClient registryClient
+
+    CourseInstallEncoderService(MessageProducer aProducer, AvroJsonEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
         producer = aProducer
         encoder = anEncoder
+        registryClient = aRegistryClient
     }
 
     @Override
     void handleEvent( String event ) {
         def schema = CourseInstall.classSchema
+        log.info( 'The avro schema for event encoding : ' + schema.toString( true ) )
 
         def jsonParser = new JsonSlurper()
         def jsonData = jsonParser.parseText( event )
@@ -76,9 +86,16 @@ class CourseInstallService implements CourseInstallPort {
         // encode document using avro json encoding
         def encodedDocument = encoder.encodeEvent( schema, avroData, CourseInstall.class )
 
+        // save schema to the schema registry server
+        def registryResponse = registryClient.register( schema.name, 'avro', schema.toString() )
+        log.info( "The schema with subject ${registryResponse.schemaReference.subject} was saved to the schema registry " +
+                "with the id ${registryResponse.id}." )
+        def schemaId = registryResponse.id
+
         // send encoded document to the messaging system
         def message = MessageBuilder.withPayload( encodedDocument )
                 .setHeader( MessageHeaders.CONTENT_TYPE,  AvroConstants.COURSE_INSTALL_CHANNEL )
+                .setHeader( MessageHeaders.SCHEMA_ID, schemaId )
                 .build()
         producer.sendMessage( message )
     }
