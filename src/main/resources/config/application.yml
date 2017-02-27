@@ -51,7 +51,8 @@ server:
 
 logging:
   level:
-    org.springframework.integration: DEBUG
+    org.springframework.integration: INFO
+  config: classpath:Lockback.groovy
 
 # Override the default security properties, defined in org.springframework.boot.autoconfigure.security.SecurityProperties
 security:

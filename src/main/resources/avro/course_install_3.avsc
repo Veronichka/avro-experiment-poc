@@ -1,0 +1,55 @@
+{
+"namespace": "event.course_install",
+"type": "record",
+"name": "CourseInstall",
+"doc": "The invalid third version of the course install document",
+"fields": [
+        {"name": "course",
+         "type": {
+             "type": "record",
+             "name": "Course",
+             "fields": [
+                {"name": "uuid", "type": "string"},
+                {"name": "courseName", "type": "string", "aliases": ["name"]},
+                {"name": "knownLanguage", "type": "string"},
+                {"name": "targetLanguage", "type": "string"},
+                {"name": "product", "type": "string"},
+                {"name": "invalid_Field", "type": "string", "doc": "this field is required but not compatible with previous version"}
+            ]
+        }
+        },
+        {"name": "units",
+         "type": {
+            "type": "array",
+            "items": {
+                "type": "record",
+                "name": "Unit",
+                "fields": [
+                    {"name": "uuid", "type": "string"},
+                    {"name": "name", "type": "string"},
+                    {"name": "maxScore", "type": "int"},
+                    {"name": "minScore", "type": "int"},
+                    {"name": "hasAssessment", "type": "boolean"},
+                    {"name": "lessons",
+                     "type": {
+                        "type": "array",
+                        "items": {
+                            "type": "record",
+                            "name": "Lesson",
+                            "fields": [
+                                {"name": "id", "type": "int"},
+                                {"name": "uuid", "type": "string"},
+                                {"name": "name", "type": "string"},
+                                {"name": "position", "type": "int"},
+                                {"name": "isAssessment", "type": "boolean"}
+                                ]
+                            }
+                        }
+                    },
+                    {"name": "newField", "type": "string", "default": "default value for new string"}
+                    ]
+                }
+            }
+         }
+    ]
+}

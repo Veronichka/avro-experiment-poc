@@ -1,11 +1,14 @@
 package com.vherasymenko.avro
 
+import com.vherasymenko.avro.schared.RestConstants
 import org.apache.avro.Schema
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
 import org.springframework.web.util.UriComponentsBuilder
+import spock.lang.Unroll
+import java.util.regex.Pattern
 
 /**
  * The integration test to the full encoder work flow.
@@ -15,7 +18,8 @@ class RestIntegrationTest extends BaseIntegrationTest {
     @Autowired
     SchemaRegistryClient registryClient
 
-    def 'exercise full workflow for the course install'() {
+    @Unroll
+    def 'exercise full workflow for the course install decoding from V1 to #description'() {
         given: 'valid rest operations'
         assert restOperations
 
@@ -52,12 +56,41 @@ class RestIntegrationTest extends BaseIntegrationTest {
         '''
 
         when: 'the valid request event is sent through rest'
-        def reportURI = getRestBaseURI( '/course/install' ).build().toUri()
+        def reportURI = getRestBaseURI( restPath ).build().toUri()
         def entity = new HttpEntity( requestEvent )
         def createResult = restOperations.postForEntity( reportURI, entity, String )
 
         then: 'the valid response is returned'
         createResult.statusCode == HttpStatus.OK
+
+        and: 'the success is logged'
+        sleep( 300 )
+        def fileStream = new FileInputStream('logs/logfile.txt')
+        def buffer = new BufferedReader(new InputStreamReader(fileStream))
+
+        if ( restPath == RestConstants.COURSE_INSTAL_V1_TO_V3 ) {
+            def pattern = Pattern.compile( 'The decoding failed' )
+            assert findExpectedMessage( buffer, pattern )
+        }
+        else {
+            def pattern = Pattern.compile('Successfully decoded document with json avro decoder')
+            assert findExpectedMessage( buffer, pattern )
+        }
+
+        where:
+        restPath                                | description
+        RestConstants.COURSE_INSTALL_V1_TO_V1   | 'V1'
+        RestConstants.COURSE_INSTALL_V1_TO_V2   | 'V2'
+        RestConstants.COURSE_INSTAL_V1_TO_V3    | 'V3'
+    }
+
+    private boolean findExpectedMessage( BufferedReader buffer, Pattern pattern ) {
+        String strLine
+        def messageMatched = false
+        while ( ( strLine = buffer.readLine() ) != null && !messageMatched ) {
+            messageMatched = pattern.matcher( strLine ).find()
+        }
+        messageMatched
     }
 
     def 'exercise full workflow for the lesson status'() {
@@ -87,12 +120,19 @@ class RestIntegrationTest extends BaseIntegrationTest {
         '''
 
         when: 'the valid request event is sent through rest'
-        def reportURI = getRestBaseURI( '/lesson/status' ).build().toUri()
+        def reportURI = getRestBaseURI( RestConstants.LESSON_STATUS ).build().toUri()
         def entity = new HttpEntity( requestEvent )
         def createResult = restOperations.postForEntity( reportURI, entity, String )
 
         then: 'the valid response is returned'
         createResult.statusCode == HttpStatus.OK
+
+        and: 'the success is logged'
+        sleep( 300 )
+        def fileStream = new FileInputStream('logs/logfile.txt')
+        def buffer = new BufferedReader(new InputStreamReader(fileStream))
+        def pattern = Pattern.compile('Successfully decoded document with json avro decoder')
+        assert findExpectedMessage( buffer, pattern )
     }
 
     def 'exercise schema registry client'() {
@@ -112,6 +152,7 @@ class RestIntegrationTest extends BaseIntegrationTest {
                 scheme( 'http' ).
                 host( 'localhost' ).
                 port( portListener.serverPort ).
+                path( RestConstants.REPORT ).
                 path( path )
     }
 }

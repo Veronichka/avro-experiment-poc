@@ -1,6 +1,5 @@
 apply plugin: 'groovy'
 apply plugin: "io.spring.dependency-management"
-apply plugin: 'org.springframework.boot'
 apply plugin: "com.commercehub.gradle.plugin.avro"
 
 buildscript {
@@ -37,8 +36,9 @@ dependencyManagement {
 description = 'Avro Experiment PoC'
 ext.builtOn = new Date()
 
-apply from: "$rootDir/gradle/cucumber.gradle"
+apply from: "$rootDir/gradle/boot.gradle"
 apply from: "$rootDir/gradle/spock.gradle"
+apply from: "$rootDir/gradle/cucumber.gradle"
 
 dependencies {
     compile "org.apache.avro:avro-maven-plugin:${avroVersion}"

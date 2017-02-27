@@ -7,6 +7,8 @@ import org.apache.avro.generic.GenericRecord
 import org.apache.avro.io.DatumReader
 import org.apache.avro.io.DecoderFactory
 
+import static com.vherasymenko.avro.schared.AvroConstants.DO_NOT_REUSE_STREAM
+
 /**
  * The avro binary decoder.
  */
@@ -17,8 +19,7 @@ class AvroBinaryDecoderService implements AvroBinaryDecoderPort {
     void decodeEvent( Schema schema, byte[] event ) {
         def decoder = new DecoderFactory().binaryDecoder( event, null )
         DatumReader<GenericRecord> reader = new GenericDatumReader<>( schema )
-        def reuse = null // if reuse is provided, it will be reinitialized to the given input stream
-        def document = reader.read( reuse, decoder )
+        def document = reader.read( DO_NOT_REUSE_STREAM, decoder )
         log.info( 'Decoded document with binary avro decoder: ' + document )
     }
 }

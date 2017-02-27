@@ -2,7 +2,6 @@ package com.vherasymenko.avro.encoder.core
 
 import com.vherasymenko.avro.encoder.core.json.AvroJsonEncoderPort
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
-import com.vherasymenko.avro.schared.AvroConstants
 import com.vherasymenko.avro.schared.MessageHeaders
 import event.course_install.Course
 import event.course_install.CourseInstall
@@ -34,14 +33,14 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
      */
     private final SchemaRegistryClient registryClient
 
-    CourseInstallEncoderService(MessageProducer aProducer, AvroJsonEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
+    CourseInstallEncoderService( MessageProducer aProducer, AvroJsonEncoderPort anEncoder, SchemaRegistryClient aRegistryClient ) {
         producer = aProducer
         encoder = anEncoder
         registryClient = aRegistryClient
     }
 
     @Override
-    void handleEvent( String event ) {
+    void handleEvent( String event, String processChannelName ) {
         def schema = CourseInstall.classSchema
         log.info( 'The avro schema for event encoding : ' + schema.toString( true ) )
 
@@ -90,12 +89,11 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
         def registryResponse = registryClient.register( schema.name, 'avro', schema.toString() )
         log.info( "The schema with subject ${registryResponse.schemaReference.subject} was saved to the schema registry " +
                 "with the id ${registryResponse.id}." )
-        def schemaId = registryResponse.id
 
         // send encoded document to the messaging system
         def message = MessageBuilder.withPayload( encodedDocument )
-                .setHeader( MessageHeaders.CONTENT_TYPE,  AvroConstants.COURSE_INSTALL_CHANNEL )
-                .setHeader( MessageHeaders.SCHEMA_ID, schemaId )
+                .setHeader( MessageHeaders.CONTENT_TYPE, processChannelName )
+                .setHeader( MessageHeaders.SCHEMA_ID, registryResponse.id )
                 .build()
         producer.sendMessage( message )
     }
