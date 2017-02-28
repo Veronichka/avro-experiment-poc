@@ -31,7 +31,7 @@ class CourseInstallDecoderService implements CourseInstallDecoderPort {
     @Override
     void decodeCourseInstallV1ToV2( String event, int schemaId ) {
         def writeSchema = new Schema.Parser().parse( registryClient.fetch( schemaId ) )
-        def readSchema = new Schema.Parser().parse( new File( 'src/main/resources/avro/course_install_2.avsc' ) )
+        def readSchema = new Schema.Parser().parse( new File( 'src/main/resources/avro/v200/course_install_2.avsc' ) )
         log.info( 'The avro schema for event decoding : ' + readSchema.toString( true ) )
 
         decoder.decodeEventWithNewSchema( writeSchema, readSchema, event )
