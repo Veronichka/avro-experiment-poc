@@ -9,6 +9,7 @@ import event.course_install.Lesson
 import event.course_install.Unit
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import org.apache.avro.Schema
 import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.messaging.support.MessageBuilder
 
@@ -41,7 +42,7 @@ class CourseInstallEncoderService implements CourseInstallEncoderPort {
 
     @Override
     void handleEvent( String event, String processChannelName ) {
-        def schema = CourseInstall.classSchema
+        def schema = new Schema.Parser().parse( new File( 'src/main/avro/course_install.avsc' ) )
         log.info( 'The avro schema for event encoding : ' + schema.toString( true ) )
 
         def jsonParser = new JsonSlurper()

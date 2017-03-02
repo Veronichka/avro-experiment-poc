@@ -1,0 +1,86 @@
+{
+"namespace": "event.user_create",
+"type": "record",
+"name": "UserCreate",
+"fields": [
+    {"name": "version", "type": "string"},
+    {"name": "headers",
+     "type": {
+         "type": "record",
+         "name": "EventHeaders",
+         "fields": [
+            {"name": "id", "type": "string"},
+            {"name": "type", "type": {"type": "array", "items": "string"}},
+            {"name": "timestamp", "type": "long"},
+            {"name": "source",
+             "type": {
+                 "type": "record",
+                 "name": "SourceHeader",
+                 "fields": [
+                    {"name": "PRODUCT", "type": "string"},
+                    {"name": "NODE", "type": "string"},
+                    {"name": "SVR", "type": "string", "default": ""}
+                    ]
+                }
+            },
+            {"name": "context",
+             "type": {
+                 "type": "record",
+                 "name": "ContextHeader",
+                 "fields": [
+                    {"name": "principal",
+                     "type": {
+                         "type": "record",
+                         "name": "Principal",
+                         "fields": [
+                            {"name": "USER", "type": "string"},
+                            {"name": "SYSTEM", "type": "string", "default": ""},
+                            {"name": "EXTERNAL", "type": "string", "default": ""}
+                            ]
+                        }
+                    },
+                    {"name": "session", "type": "string"},
+                    {"name": "unitOfWork", "type": "string"}
+                    ]
+                }
+            }
+            ]
+        }
+    },
+    {"name": "payload",
+     "type": {
+         "type": "record",
+         "name": "EventPayload",
+         "fields": [
+             {"name": "user",
+              "type": {
+                "type": "record",
+                "name": "User",
+                "fields": [
+                    {"name": "login", "type": "string"},
+                    {"name": "uuid", "type": "string"},
+                    {"name": "nickname", "type": "string"},
+                    {"name": "role", "type": {"type": "enum", "name": "Role", "symbols": ["STUDENT", "EDUADMIN", "ITADMIN"]}},
+                    {"name": "fullname", "type": "string"},
+                    {"name": "grade", "type": {"type": "enum", "name": "Grade", "symbols": ["SELFREG", "TRIAL", "SSO", "REGULAR"]}},
+                    {"name": "status", "type": {"type": "enum", "name": "Status", "symbols": ["ACTIVE", "INACTIVE", "INVALID"]}},
+                    {"name": "comment", "type": "string"},
+                    {"name": "email", "type": "string"},
+                    {"name": "phone", "type": "string"},
+                    {"name": "gender", "type": {"type": "enum", "name": "Gender", "symbols": ["MALE", "FEMALE", "UNSPECIFIED"]}},
+                    {"name": "receiveUpdates", "type": "boolean"},
+                    {"name": "languageOfInterest", "type": "string"},
+                    {"name": "source", "type": "string"},
+                    {"name": "cleUserID", "type": "string"},
+                    {"name": "organizationUuid", "type": "string"},
+                    {"name": "firstOrgUnitUuid", "type": "string"},
+                    {"name": "secondOrgUnitUuid", "type": "string"},
+                    {"name": "userClass", "type": "string"}
+                    ]
+                }
+            }
+            ]
+        }
+    }
+    ]
+}

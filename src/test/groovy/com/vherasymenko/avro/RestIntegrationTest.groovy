@@ -73,7 +73,7 @@ class RestIntegrationTest extends BaseIntegrationTest {
             assert findExpectedMessage( buffer, pattern )
         }
         else {
-            def pattern = Pattern.compile('Successfully decoded document with json avro decoder')
+            def pattern = Pattern.compile('Successfully decoded document with avro decoder')
             assert findExpectedMessage( buffer, pattern )
         }
 
@@ -131,7 +131,7 @@ class RestIntegrationTest extends BaseIntegrationTest {
         sleep( 300 )
         def fileStream = new FileInputStream('logs/logfile.txt')
         def buffer = new BufferedReader(new InputStreamReader(fileStream))
-        def pattern = Pattern.compile('Successfully decoded document with json avro decoder')
+        def pattern = Pattern.compile('Successfully decoded document with avro decoder')
         assert findExpectedMessage( buffer, pattern )
     }
 

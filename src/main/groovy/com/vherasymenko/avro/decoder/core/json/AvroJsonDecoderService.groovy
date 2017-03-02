@@ -30,7 +30,7 @@ class AvroJsonDecoderService implements AvroJsonDecoderPort {
         try {
             def decoder = new DecoderFactory().jsonDecoder( schema, event )
             def document = reader.read( null, decoder )
-            log.info( 'Successfully decoded document with json avro decoder: ' + JsonOutput.prettyPrint( document.toString() ) )
+            log.info( 'Successfully decoded document with avro decoder: ' + JsonOutput.prettyPrint( document.toString() ) )
         }
         catch ( Exception e ) {
             log.error( 'The decoding failed: ' + e.message )

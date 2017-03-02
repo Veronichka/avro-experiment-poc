@@ -20,6 +20,8 @@ import com.vherasymenko.avro.encoder.core.CourseInstallEncoderService
 import com.vherasymenko.avro.encoder.core.LessonStatusEncoderPort
 import com.vherasymenko.avro.encoder.core.LessonStatusEncoderService
 import com.vherasymenko.avro.encoder.outbound.MessageProducer
+import com.vherasymenko.avro.schemaLoader.AvroSchemasLoaderPort
+import com.vherasymenko.avro.schemaLoader.AvroSchemasLoaderService
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.boot.SpringApplication
@@ -28,6 +30,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.stream.schema.client.ConfluentSchemaRegistryClient
 import org.springframework.cloud.stream.schema.client.SchemaRegistryClient
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.client.RestOperations
 import org.springframework.web.client.RestTemplate
@@ -60,6 +63,12 @@ class Application {
     RabbitTemplate rabbitTemplate( CachingConnectionFactory connectionFactory ) {
         def bean = new RabbitTemplate( connectionFactory )
         bean
+    }
+
+    @Bean
+    AvroSchemasLoaderPort avroSchemasScanPort( SchemaRegistryClient aRegistryClient ) {
+        def resolver = new PathMatchingResourcePatternResolver()
+        new AvroSchemasLoaderService( resolver, aRegistryClient )
     }
 
     // Encoder
