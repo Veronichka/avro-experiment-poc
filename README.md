@@ -73,7 +73,7 @@ Let's consider we run Avro-Experiment-PoC using REST endpoint that demonstrates 
              "doc": "The course instance.",
              "fields": [
                 {"name": "uuid", "type": "string", "doc": "Course UUID."},
--                {"name": "name", "type": "string", "aliases": ["courseName"], "doc": "Course display name."},
++                {"name": "name", "type": "string", "aliases": ["courseName"], "doc": "Course display name."},
                 {"name": "knownLanguage", "type": "string", "doc": "Course Known Language."},
                 {"name": "targetLanguage", "type": "string", "doc": "Course Target Language."},
                 {"name": "product", "type": "string", "doc": "Course Product."}
@@ -88,7 +88,7 @@ Let's consider we run Avro-Experiment-PoC using REST endpoint that demonstrates 
                 "name": "Unit",
                 "doc": "The course unit instance.",
                 "fields": [
-+                    {"name": "id", "type": "int", "default": 0, "doc": "Course Init ID."},
+-                    {"name": "id", "type": "int", "default": 0, "doc": "Course Init ID."},
                     {"name": "uuid", "type": "string", "doc": "Course Unit UUID."},
                     {"name": "name", "type": "string", "doc": "Course Unit Display Name."},
                     {"name": "maxScore", "type": "int", "doc": "Course Unit MaxScore."},
@@ -136,7 +136,7 @@ Let's consider we run Avro-Experiment-PoC using REST endpoint that demonstrates 
              "doc": "The course instance.",
              "fields": [
                 {"name": "uuid", "type": "string", "doc": "Course UUID."},
--                {"name": "courseName", "type": "string", "aliases": ["name"], "default": "default value", "doc": "Course display name."},
++                {"name": "courseName", "type": "string", "aliases": ["name"], "default": "default value", "doc": "Course display name."},
                 {"name": "knownLanguage", "type": "string", "doc": "Course Known Language."},
                 {"name": "targetLanguage", "type": "string", "doc": "Course Target Language."},
                 {"name": "product", "type": "string", "doc": "Course Product."}
@@ -173,7 +173,7 @@ Let's consider we run Avro-Experiment-PoC using REST endpoint that demonstrates 
                             }
                         }
                     },
--                    {"name": "newField", "type": "string", "default": "default value for new string", "doc": "Added new field to the second document version."}
++                    {"name": "newField", "type": "string", "default": "default value for new string", "doc": "Added new field to the second document version."}
                     ]
                 }
             }
@@ -190,14 +190,14 @@ As you have noticed in version 2 we renamed `name` field of Course to `courseNam
 ```diff
 "course" : {
     "uuid" : "fb88ad20-1702-11e3-a517-50e5494249f7",
--    "name" : "Russian Essentials Ver.2",
++    "name" : "Russian Essentials Ver.2",
     "knownLanguage" : "RUSSIAN",
     "targetLanguage" : "ENGLISH",
     "product" : "LessonGin"
   },
   "units" : [
     {
-+    "id" : 81,
+-    "id" : 81,
     "uuid" : "7764b0f0-9d28-4c2a-82b9-3cb5daba3335",
     "name" : "Unit 1",
     "maxScore" : 8,
@@ -218,7 +218,7 @@ As you have noticed in version 2 we renamed `name` field of Course to `courseNam
 ```diff
 "course": {
         "uuid": "fb88ad20-1702-11e3-a517-50e5494249f7",
--        "courseName": "Russian Essentials Ver.2",
++        "courseName": "Russian Essentials Ver.2",
         "knownLanguage": "RUSSIAN",
         "targetLanguage": "ENGLISH",
         "product": "LessonGin"
@@ -239,7 +239,7 @@ As you have noticed in version 2 we renamed `name` field of Course to `courseNam
                     "isAssessment": false
                 }
             ],
--            "newField": "default value for new string"
++            "newField": "default value for new string"
         }
     ]
 ```
